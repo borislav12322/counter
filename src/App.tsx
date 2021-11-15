@@ -1,48 +1,57 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {Counter} from "./Counter";
 import {CounterSettings} from "./CounterSettings";
 
 function App() {
-    // const startNumber: number = 0;
-    // const maxNumber: number = 5;
-
+    // Стартовое значение
     let [startValue, setStartValue] = useState<number>(0);
+    // Максимальное значение
     const [maxValue, setMaxValue] = useState<number>(5);
+    // Отображаемое значение
     let [screenNumber, setScreenNumber] = useState<number | string>(startValue);
     const [error, setError] = useState(false);
-    let nextNumber = startValue;
 
+    // localStorage.setItem('maxValue', JSON.stringify(maxValue));
+
+    useEffect(() => {
+        let startValueAsString = localStorage.getItem('startValue');
+        if (startValueAsString) {
+            let newStartValue = JSON.parse(startValueAsString);
+            setStartValue(newStartValue);
+            setScreenNumber(newStartValue);
+        }
+
+        let maxValueAsString = localStorage.getItem('maxValue');
+        if (maxValueAsString) {
+            let newMaxValue = JSON.parse(maxValueAsString);
+            setMaxValue(newMaxValue);
+        }
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('startValue', JSON.stringify(startValue));
+        localStorage.setItem('maxValue', JSON.stringify(maxValue));
+    }, [startValue, maxValue]);
+
+
+    // Отслеживание изменения стартового значения
     const startValueInputHandler = (value: number) => {
         setStartValue(value);
     };
-
+    // Отслеживание изменения максимального значения
     const maxValueInputHandler = (value: number) => {
         setMaxValue(value);
-        // console.log(value);
     };
-
+    // Отображение числа
     const showValueOnScreen = (value: number | string) => {
-        if (startValue === maxValue || startValue > maxValue) {
-            setScreenNumber('error')
-        } else {
-            setScreenNumber(value);
-        }
+        setScreenNumber(value)
     };
 
-    const onChangeInputHandler = (valueMax: number, valueStart: number) => {
-        if (valueStart > valueMax || valueStart === valueMax) {
-            setScreenNumber('Incorrect');
-            setError(true);
-        } else if (valueStart < valueMax) {
-            setScreenNumber('customize')
-        } else if (valueStart < 0) {
-            setScreenNumber('error')
-        }
+    const checkError = (value: boolean) => {
+        setError(value)
     }
-
-    // let [number, setNumber] = useState<number>(startValue);
-
+    // Увеличение значения
     const increaseNumber = () => {
         if (screenNumber === maxValue) {
             setScreenNumber(maxValue);
@@ -51,7 +60,7 @@ function App() {
             setScreenNumber(+screenNumber);
         }
     };
-
+    // Сброс значения
     const resetNumber = () => {
         if (screenNumber > startValue) {
             setScreenNumber(startValue);
@@ -66,14 +75,13 @@ function App() {
                 valueMax={maxValue}
                 startValueHandler={startValueInputHandler}
                 maxValueHandler={maxValueInputHandler}
-                nextNumber={nextNumber}
                 showValueOnScreen={showValueOnScreen}
-                onChangeInputHandler={onChangeInputHandler}
                 error={error}
+                screenNumber={screenNumber}
+                checkError={checkError}
             />
 
             <Counter
-                nextNumber={nextNumber}
                 increaseNumber={increaseNumber}
                 resetNumber={resetNumber}
                 maxValue={maxValue}
@@ -81,6 +89,7 @@ function App() {
                 startValueInputHandler={startValueInputHandler}
                 screenNumber={screenNumber}
                 showValueOnScreen={showValueOnScreen}
+                error={error}
             />
 
         </div>
