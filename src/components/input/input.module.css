@@ -1,0 +1,27 @@
+.inputBox{
+    display: flex;
+    column-gap: 30px;
+    justify-content: space-between;
+}
+
+.label{
+    font-size: 40px;
+    color: aqua;
+}
+
+.input{
+    border: 5px solid aqua;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.error{
+    background-color: red;
+    border: 5px solid aqua;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    font-size: 20px;
+}

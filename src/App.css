@@ -8,4 +8,16 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    display: flex;
+    column-gap: 100px;
+}
+
+button{
+    background-color: aqua;
+    border: 2px aqua solid;
+    border-radius: 5px;
+    font-size: 40px;
+    cursor: pointer;
+    width: 200px;
+    transition: all .5s ease;
 }
