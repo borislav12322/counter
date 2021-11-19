@@ -1,34 +1,81 @@
-import React from "react";
+import React, {useEffect} from "react";
 import s from './counterSettings.module.css';
 import {Input} from "./components/input/Input";
 import {Button} from "./components/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./redux/store";
-import {defaultValueAC} from "./redux/defaultValue-reducer";
-import {screenNumberReducerAC} from "./redux/screenNumber-reducer";
-import {startValueReducerAC} from "./redux/startValue-reducer";
-import {maxValueReducerAC} from "./redux/maxValue-reducer";
+import {AppRootStateType, store} from "./redux/store";
+import {
+    defaultValueAC,
+    InitialStateType,
+    maxValueReducerAC,
+    screenNumberReducerAC,
+    startValueReducerAC
+} from "./redux/values-reducer";
 
-type PropsType = {
-
-}
+type PropsType = {}
 
 export const CounterSettings = (props: PropsType) => {
 
-    let startValue = useSelector<AppRootStateType, number>(state => state.startValue);
-    let maxValue = useSelector<AppRootStateType, number>(state => state.maxValue);
+    let {startValue, maxValue, ...rest} = useSelector<AppRootStateType, InitialStateType>(state => state.counter);
+
+
+    // let preloadedValues;
+    //
+    // const persistedToString = localStorage.getItem('counter');
+    //
+    // if (persistedToString) {
+    //     preloadedValues = JSON.parse(persistedToString);
+    // }
+    //
+    // store.subscribe(()=>{
+    //     const startValue = store.getState().counter.startValue;
+    //     const maxValue = store.getState().counter.maxValue;
+    //
+    //     const counter = {
+    //         start: startValue,
+    //         max: maxValue,
+    //     };
+    //
+    //     localStorage.setItem('counter', JSON.stringify(counter));
+    // });
+
+
     const dispatch = useDispatch();
+
 
     const onClickHandler = () => {
         dispatch(defaultValueAC(false));
         dispatch(screenNumberReducerAC(startValue));
+
+
     };
 
-    const startValueHandler = (value: number) =>{
+    useEffect(() => {
+        let counterAsString = localStorage.getItem('counter');
+        if (counterAsString) {
+            let newValues = JSON.parse(counterAsString);
+            dispatch(startValueReducerAC(newValues.startValue));
+            dispatch(maxValueReducerAC(newValues.maxValue));
+        }
+    }, [])
+
+
+    useEffect(() => {
+
+        const counter = {
+            startValue,
+            maxValue,
+        };
+
+        localStorage.setItem('counter', JSON.stringify(counter));
+
+    }, [startValue, maxValue]);
+
+    const startValueHandler = (value: number) => {
         dispatch(startValueReducerAC(value))
     }
 
-    const maxValueHandler = (value: number) =>{
+    const maxValueHandler = (value: number) => {
         dispatch(maxValueReducerAC(value))
     }
 

@@ -3,21 +3,15 @@ import s from './counter.module.css';
 import {Button} from "./components/Button";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./redux/store";
-import {screenNumberReducerAC} from "./redux/screenNumber-reducer";
+import {InitialStateType, screenNumberReducerAC} from "./redux/values-reducer";
 
-type propsType = {
+type PropsType = {
+
 }
 
-export const Counter = (props: propsType) => {
+export const Counter = (props: PropsType) => {
 
-    let startValue = useSelector<AppRootStateType, number>(state => state.startValue);
-    let maxValue = useSelector<AppRootStateType, number>(state => state.maxValue);
-    let screenNumber = useSelector<AppRootStateType, number>(state => state.screenNumber);
-    let isDefaultValue = useSelector<AppRootStateType, boolean>(state => state.defaultValue);
-    let error = useSelector<AppRootStateType, boolean>(state => state.error);
-
-
-
+    let {startValue, maxValue,screenNumber,defaultValue, error} = useSelector<AppRootStateType, InitialStateType>(state => state.counter);
     const dispatch = useDispatch();
 
     const increaseNumberHandler = () => {
@@ -43,7 +37,7 @@ export const Counter = (props: propsType) => {
                     {
                         error
                             ? 'Incorrect'
-                            : isDefaultValue
+                            : defaultValue
 
                                 ? 'Enter value'
                                 : screenNumber}
@@ -52,11 +46,11 @@ export const Counter = (props: propsType) => {
                 <div className={s.btn__box}>
 
                     <Button
-                        disabled={startValue > maxValue || error || screenNumber === maxValue || isDefaultValue}
+                        disabled={startValue > maxValue || error || screenNumber === maxValue || defaultValue}
                         callback={increaseNumberHandler}
                         title='inc'/>
                     <Button
-                        disabled={startValue > maxValue || error || screenNumber === startValue || isDefaultValue}
+                        disabled={startValue > maxValue || error || screenNumber === startValue || defaultValue}
                         callback={resetNumberHandler}
                         title='reset'/>
                 </div>

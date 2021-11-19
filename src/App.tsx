@@ -6,11 +6,13 @@ import {CounterSettings} from "./CounterSettings";
 
 function App() {
 
-
     return (
         <div className='app'>
+
             <CounterSettings/>
+
             <Counter/>
+
         </div>
     );
 }

@@ -1,43 +1,33 @@
 import {applyMiddleware, combineReducers, createStore} from "redux";
-import {startValueReducer} from "./startValue-reducer";
-import {maxValueReducer} from "./maxValue-reducer";
-import {screenNumberReducer} from "./screenNumber-reducer";
-import {defaultValueReducer} from "./defaultValue-reducer";
-import {errorReducer} from "./error-reducer";
+import {counterReducer} from "./values-reducer";
 import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
-    startValue: startValueReducer,
-    maxValue: maxValueReducer,
-    screenNumber: screenNumberReducer,
-    defaultValue: defaultValueReducer,
-    error: errorReducer,
+    counter: counterReducer,
 });
 
+// let preloadedValues;
+//
+// const persistedToString = localStorage.getItem('counter');
+//
+// if(persistedToString){
+//     preloadedValues = JSON.parse(persistedToString);
+// }
 
+export const store = createStore(rootReducer, applyMiddleware(thunk));
 
-let preloadedValues;
-
-const persistedToString = localStorage.getItem('counter');
-if(persistedToString){
-    preloadedValues = JSON.parse(persistedToString);
-    console.log(preloadedValues)
-}
-
-export const store = createStore(rootReducer, preloadedValues, applyMiddleware(thunk));
-
-store.subscribe(()=>{
-
-    const startValue = store.getState().startValue;
-    const maxValue = store.getState().maxValue;
-
-    const counter = {
-        startValue,
-        maxValue
-    };
-
-    localStorage.setItem('counter', JSON.stringify(counter));
-})
+// store.subscribe(()=>{
+//     const state = store.getState().counter;
+//     const startValue = store.getState().counter.startValue;
+//     const maxValue = store.getState().counter.maxValue;
+//
+//     const counter = {
+//         start: startValue,
+//         max: maxValue,
+//     };
+//
+//     localStorage.setItem('counter', JSON.stringify(counter));
+// });
 
 export type AppRootStateType = ReturnType<typeof rootReducer>;
 

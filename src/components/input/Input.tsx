@@ -2,8 +2,7 @@ import React, {ChangeEvent, useEffect} from "react";
 import s from './input.module.css';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../redux/store";
-import {defaultValueAC} from "../../redux/defaultValue-reducer";
-import {errorAC} from "../../redux/error-reducer";
+import {defaultValueAC, errorAC, InitialStateType} from "../../redux/values-reducer";
 
 type PropsType = {
     value: number
@@ -13,9 +12,7 @@ type PropsType = {
 
 export const Input = (props: PropsType) => {
 
-    let startValue = useSelector<AppRootStateType, number>(state => state.startValue);
-    let maxValue = useSelector<AppRootStateType, number>(state => state.maxValue);
-    let error = useSelector<AppRootStateType, boolean>(state => state.error);
+    let {startValue, maxValue, error} = useSelector<AppRootStateType, InitialStateType>(state => state.counter);
     const dispatch = useDispatch();
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,8 +35,8 @@ export const Input = (props: PropsType) => {
         } else {
             dispatch(errorAC(false));
         }
-        
-    }, [maxValue, startValue])
+
+    }, [maxValue, startValue, dispatch]);
 
     return (
         <div className={s.inputBox}>
