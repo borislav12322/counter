@@ -1,34 +1,62 @@
-import React, {useState} from "react";
+import React from "react";
 import s from './counterSettings.module.css';
 import {Input} from "./components/input/Input";
+import {Button} from "./components/Button";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./redux/store";
+import {defaultValueAC} from "./redux/defaultValue-reducer";
+import {screenNumberReducerAC} from "./redux/screenNumber-reducer";
+import {startValueReducerAC} from "./redux/startValue-reducer";
+import {maxValueReducerAC} from "./redux/maxValue-reducer";
 
 type PropsType = {
-    valueStart: number
-    valueMax: number
-    startValueHandler: (value: number) => void
-    maxValueHandler:(value: number) => void
-    showValueOnScreen: (value: number | string) => void
-    error: boolean
-    screenNumber: number | string
-    checkError: (value: boolean) =>void
+
 }
 
 export const CounterSettings = (props: PropsType) => {
-    
+
+    let startValue = useSelector<AppRootStateType, number>(state => state.startValue);
+    let maxValue = useSelector<AppRootStateType, number>(state => state.maxValue);
+    const dispatch = useDispatch();
+
     const onClickHandler = () => {
-        props.showValueOnScreen(props.valueStart);
+        dispatch(defaultValueAC(false));
+        dispatch(screenNumberReducerAC(startValue));
     };
-    
+
+    const startValueHandler = (value: number) =>{
+        dispatch(startValueReducerAC(value))
+    }
+
+    const maxValueHandler = (value: number) =>{
+        dispatch(maxValueReducerAC(value))
+    }
+
     return (
         <div className={s.counterSettingsBox}>
             <div className={s.wrapper}>
+
                 <div className={s.inputContainer}>
-                    <Input checkError={props.checkError} showValueOnScreen={props.showValueOnScreen} error={props.error} text={'max value'} value={props.valueMax} callback={props.maxValueHandler} valueStart={props.valueStart} valueMax={props.valueMax}/>
-                    <Input checkError={props.checkError} showValueOnScreen={props.showValueOnScreen} error={props.error} text={'start value'} value={props.valueStart} callback={props.startValueHandler} valueStart={props.valueStart} valueMax={props.valueMax}/>
+                    <Input
+                        text={'max value'}
+                        value={maxValue}
+                        callback={maxValueHandler}
+                    />
+
+                    <Input
+                        text={'start value'}
+                        value={startValue}
+                        callback={startValueHandler}
+                    />
+
                 </div>
                 <div className={s.boxBtn}>
-                    <button disabled={props.valueStart >= props.valueMax} onClick={onClickHandler}>set</button>
+                    <Button title={'set'}
+                            callback={onClickHandler}
+                            disabled={startValue < 0 || maxValue <= startValue}
+                    />
                 </div>
+
             </div>
         </div>
     )

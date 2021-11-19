@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 
 type propsType = {
     title: string
@@ -7,6 +7,8 @@ type propsType = {
 }
 
 export const Button = (props: propsType) => {
+
+
     return (
         <div>
             <button onClick={props.callback} disabled={props.disabled}>
